@@ -1,0 +1,294 @@
+{% extends 'stacked-layout.html' %}
+{% load static %}
+{% block content %}
+<div class="grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
+    <div class="mb-4 col-span-full xl:mb-2">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="{% url 'dashboard' %}" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+                        <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Inicio
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <a class="ml-1 text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-300 dark:hover:text-white">Curriculum Vitae</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page">Consultar</span>
+                    </div>
+                </li>
+            </ol>
+            
+        </nav>
+        <div>
+        
+    </div> 
+    </div> 
+      
+</div>
+
+<div class="container mx-auto px-4 ">
+    <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center space-x-2">
+            <div class="w-6 h-6 flex items-center justify-center rounded-full 
+                {% if docente.cv_docente.estado %} 
+                    bg-green-500  <!-- Activo -->
+                {% else %}
+                    bg-red-500    <!-- Inactivo -->
+                {% endif %} text-white" id="status-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                    {% if docente.cv_docente.estado %}
+                        <!-- Ícono de Activo (Check) -->
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    {% else %}
+                        <!-- Ícono de Inactivo (Cruz) -->
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    {% endif %}
+                </svg>
+            </div>
+            <span class="text-sm font-medium
+                {% if docente.cv_docente.estado %}
+                    text-green-500
+                {% else %}
+                    text-red-500
+                {% endif %}">
+                {% if docente.cv_docente.estado %}
+                    Activo
+                {% else %}
+                    Inactivo
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    <!-- Header Principal -->
+    <div class="bg-white border border-gray-200 rounded-lg shadow-md p-6 flex flex-col md:flex-row items-center justify-between dark:border-gray-700 dark:bg-gray-800">
+        <div class="flex items-center">
+            <img
+                class="w-24 h-24 rounded-full shadow-md border-4 border-white"
+                src="{% if docente.foto %}{{ docente.foto.url }}{% else %}{% static 'android-icon-36x36.png' %}{% endif %}"
+                alt="Foto de perfil"
+            />
+            <div class="ml-4">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">{{ docente.nombre }} {{ docente.apellido }}</h1>
+                <p class="text-base md:text-lg mt-1 text-gray-700 dark:text-gray-300">Docente {{ docente.tipo_contrato }} de {{ docente.especialidad }}</p>
+                <p class="text-sm md:text-base text-gray-600 dark:text-gray-400">Facultad: {{ docente.facultad }} - {{ docente.universidad }}</p>
+            </div>
+        </div>
+        <div class="mt-4 md:mt-0 flex space-x-4">
+            {% if docente.cv_docente.privacidad.linkedin_visible %}
+                {% if docente.cv_docente.linkedin != 'None' %}
+                <a href="{{ docente.cv_docente.linkedin }}" target="_blank" class="text-blue-600 hover:text-blue-400 dark:text-white dark:hover:text-blue-500">
+                    <i class="fab fa-linkedin fa-2x"></i>
+                </a>
+                {% endif %}
+            {% endif%}
+
+            {% if docente.cv_docente.privacidad.x_visible %}
+                {% if docente.cv_docente.x != 'None' %}
+                <a href="{{ docente.cv_docente.x }}" target="_blank" class="text-blue-400 hover:text-blue-300 dark:text-white dark:hover:text-blue-400">
+                    <i class="fab fa-twitter fa-2x"></i>
+                </a>
+                {% endif %}
+            {% endif%}
+
+            {% if docente.cv_docente.privacidad.github_visible %}
+                {% if docente.cv_docente.github != 'None' %}
+                <a href="{{ docente.cv_docente.github }}" target="_blank" class="text-gray-900 hover:text-gray-500 dark:text-white dark:hover:text-gray-400">
+                    <i class="fab fa-github fa-2x"></i>
+                </a>
+                {% endif %}
+            {% endif%}
+        </div>
+    </div>
+
+    <!-- Sección de Contacto -->
+    <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 mt-8">
+        
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Contacto y PDF</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Información Personal -->
+            {% if conjunto_visible%}
+            <div>
+                {% if docente.privacidad.cedula_visible %}
+                <p class="text-gray-600 dark:text-gray-300 mb-2">
+                    <strong class="font-semibold dark:text-white">Cédula:</strong> {{ docente.cedula }}
+                </p>
+                {% endif%}
+                {% if docente.privacidad.num_telefono_visible %}
+                <p class="text-gray-600 dark:text-gray-300 mb-2">
+                    <strong class="font-semibold dark:text-white">Teléfono:</strong> {{ docente.num_telefono }}
+                </p>
+                {% endif%}
+                {% if docente.privacidad.correo_visible %}
+                <p class="text-gray-600 dark:text-gray-300 mb-2">
+                    <strong class="font-semibold dark:text-white">Correo Electrónico:</strong> {{ docente.correo }}
+                </p>
+                {% endif%}
+            </div>
+            {% endif%}
+
+
+            <!-- Información Profesional -->
+            {% if conjunto_dos_visible%}
+            <div>
+                {% if docente.privacidad.categoria_visible %}
+                <p class="text-gray-600 dark:text-gray-300 mb-2">
+                    <strong class="font-semibold dark:text-white">Categoría:</strong> {{ docente.categoria }}
+                </p>
+                {% endif%}
+                {% if docente.privacidad.fecha_contratacion_visible %}
+                <p class="text-gray-600 dark:text-gray-300 mb-2">
+                    <strong class="font-semibold dark:text-white">Tipo de Contrato:</strong> {{ docente.tipo_contrato }}
+                </p>
+                {% endif%}
+                {% if docente.privacidad.tipo_contrato_visible %}
+                <p class="text-gray-600 dark:text-gray-300 mb-2">
+                    <strong class="font-semibold dark:text-white">Fecha de Contratación:</strong> {{ docente.fecha_contratacion }}
+                </p>
+                {% endif%}
+            </div>
+            {% endif%}
+        </div>
+
+        <!-- Botones de Enlace de Contacto -->
+        <div class="flex space-x-4 mt-6">
+            {% if docente.cv_docente.privacidad.gmail_enviable %}
+            <!-- Botón de Gmail -->
+            <a href="https://mail.google.com/mail/?view=cm&to={{ docente.correo }}" 
+            target="_blank" 
+            class="flex items-center space-x-2 text-[#DB4437] hover:text-[#C1351D] dark:text-white dark:hover:text-gray-400">
+                <i class="fab fa-google fa-2x"></i>
+                <span class="text-sm font-semibold">Gmail</span>
+            </a>
+            {% endif %}
+            
+            {% if docente.cv_docente.privacidad.outlook_enviable %}
+            <!-- Botón de Outlook -->
+            <a href="https://outlook.office.com/mail/deeplink/compose?to={{ docente.correo }}" 
+            target="_blank" 
+            class="flex items-center space-x-2 text-[#0078D4] hover:text-[#005A9E] dark:text-white dark:hover:text-gray-400">
+                <i class="fab fa-microsoft fa-2x"></i>
+                <span class="text-sm font-semibold">Outlook</span>
+            </a>
+            {% endif %}
+            
+            <!-- Botón de PDF -->
+            <a href="{% url 'generate_curriculum' docente_id=docente.id %}" 
+            target="_blank" 
+            class="flex items-center space-x-2 text-[#E63E42] hover:text-[#C32F2F] dark:text-white dark:hover:text-gray-400">
+                <i class="fas fa-file-pdf fa-2x"></i>
+                <span class="text-sm font-semibold">PDF</span>
+            </a>
+        </div>
+
+
+    </div>
+    <!--posible endif-->
+
+
+
+
+<!-- Contenido Principal -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+    <!-- Producción Académica -->
+    <div class="col-span-3 bg-white shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Producción Académica</h2>
+        <div class="space-y-4">
+            {% for produccion in docente.cv_docente.produccion_academica.all %}
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ produccion.titulo }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ produccion.tipo }} | {{ produccion.fecha_publicacion|date:"Y-m-d" }}
+                </p>
+                <p class="text-sm mt-1 text-gray-700 dark:text-gray-300">{{ produccion.descripcion }}</p>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 dark:text-gray-400">No hay producciones académicas registradas.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Competencias -->
+    <div class="col-span-1 bg-white shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Competencias</h2>
+        <div class="space-y-4">
+            {% for competencia in docente.cv_docente.competencias.all %}
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ competencia.nombre }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ competencia.descripcion }}</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Nivel: {{ competencia.nivel }}</p>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 dark:text-gray-400">No hay competencias registradas.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<!-- Sección en Acordeón -->
+<div class="mt-8 space-y-6 ">
+    <!-- Experiencia Laboral -->
+    <div class=" bg-white shadow-md rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+        <button class="w-full text-left bg-gray-100 px-4 py-3 text-gray-800 font-bold focus:outline-none dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
+            Experiencia Laboral
+        </button>
+        <div class="p-6 space-y-4">
+            {% for experiencia in docente.cv_docente.experiencia_laboral.all %}
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ experiencia.cargo }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ experiencia.lugar_trabajo }} | {{ experiencia.fecha_inicio }} - 
+                    {% if experiencia.fecha_fin %}
+                        {{ experiencia.fecha_fin }}
+                    {% else %}
+                        Presente
+                    {% endif %}
+                </p>
+                {% if experiencia.certificado %}
+                    <p><strong>Certificado:</strong> <a href="{{ experiencia.certificado.url }}" target="_blank" class="text-blue-500">Ver Certificado (PDF)</a></p>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p class="text-gray-500 dark:text-gray-400">No hay experiencias laborales registradas.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Formación Académica -->
+    <div class="bg-white shadow-md rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+        <button class="w-full text-left bg-gray-100 px-4 py-3 text-gray-800 font-bold focus:outline-none dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
+            Formación Académica
+        </button>
+        <div class="p-6 space-y-4">
+            {% for formacion in docente.cv_docente.formacion_academica.all %}
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{ formacion.titulo }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {{ formacion.institucion }} | {{ formacion.fecha_inicio|date:"Y-m-d" }} - 
+                    {{ formacion.fecha_fin|date:"Y-m-d" }}
+                </p>
+                {% if formacion.certificado %}
+                    <p><strong>Certificado:</strong> <a href="{{ formacion.certificado.url }}" target="_blank" class="text-blue-500">Ver Certificado (PDF)</a></p>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p class="text-gray-500 dark:text-gray-400">No hay formación académica registrada.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

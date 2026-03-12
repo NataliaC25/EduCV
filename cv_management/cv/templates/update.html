@@ -1,0 +1,880 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content%}
+
+<div class="grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
+    <div class="mb-4 col-span-full xl:mb-2">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+              <li class="inline-flex items-center">
+                <a href="{% url 'dashboard' %}" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+                  <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                  Inicio
+                </a>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                  <a class="ml-1 text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-300 dark:hover:text-white">Curriculum Vitae</a>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                  <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page">Actualizar</span>
+                </div>
+              </li>
+            </ol>
+        </nav>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Actualizar Curriculum Vitae</h1>
+    </div>
+    <!-- Right Content -->
+    <div class="col-span-full xl:col-auto">
+        <div class="col-span-full xl:col-auto">
+            <div class="p-8 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-10 dark:bg-gray-800">
+                <div class="flex flex-col items-center justify-center"> <!-- Centrado en todas las pantallas -->
+                    <!-- Mostrar imagen de perfil o una imagen por defecto -->
+                    <div class="flex justify-center mb-4"> <!-- Centrado de la imagen -->
+                        <img class="rounded-full w-40 h-40 mx-auto" 
+                             src="{% if user.docente.foto %}{{ user.docente.foto.url }}{% else %}{% static 'android-icon-36x36.png' %}{% endif %}" 
+                             alt="Foto de perfil">
+                    </div>
+                
+                    <div class="text-center"> <!-- Centrado de texto -->
+                        <h3 class="mb-1 text-xl font-bold text-gray-900 dark:text-white">Foto de perfil</h3>
+                        <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                            JPG o PNG.
+                        </div>
+                        <!-- Formulario para cargar imagen --> <!-- Hice cambio aquí -->
+                        <form action="{% url 'update_picture_teacher' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="flex items-center space-x-4 justify-center"> <!-- Centrado de los botones -->
+                                <!-- Campo de carga de imagen -->
+                                <label for="profile_picture" class="flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path>
+                                        <path d="M9 13h2v5a1 1 0 11-2 0v-5z"></path>
+                                    </svg>
+                                    Subir foto
+                                    <input id="profile_picture" name="profile_picture" type="file" accept="image/*" class="hidden" onchange="this.form.submit()">
+                                </label>
+                
+                                <!-- Botón de eliminación -->
+                                <button type="submit" name="remove_picture" value="true" 
+                                        class="flex items-center py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 10a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z"></path>
+                                    </svg>
+                                    Eliminar
+                                </button>
+                            </div>                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-8 mb-5 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+            <h3 class="mb-4 text-xl font-semibold dark:text-white">Redes Sociales</h3>
+            <form action="{% url 'update_social_links' %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="col-span-6 sm:col-span-3 mb-7">
+                    <label for="linkedin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">LinkedIn</label>
+                    <input type="url" name="linkedin" id="linkedin" 
+                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                        placeholder="Enlace a tu perfil de LinkedIn" value="{{ user.docente.cv_docente.linkedin }}">
+                </div>
+            
+                <div class="col-span-6 sm:col-span-3 mb-4">
+                    <label for="x" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Twitter</label>
+                    <input type="url" name="x" id="x" 
+                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                        placeholder="Enlace a tu perfil de x" value="{{ user.docente.cv_docente.x }}">
+                </div>
+        
+                <div class="col-span-6 sm:col-span-3 mb-4">
+                    <label for="github" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">GitHub</label>
+                    <input type="url" name="github" id="github" 
+                        class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                        placeholder="Enlace a tu perfil de GitHub" value="{{ user.docente.cv_docente.github }}">
+                </div>
+            
+                <div class="mt-8">
+                    <button type="submit" class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Guardar</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <div class="col-span-2">
+        <div class="p-10 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-15 dark:bg-gray-800">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold dark:text-white">Información personal</h3>
+                <!-- Estado de verificación al lado del encabezado -->
+                <div class="flex items-center space-x-2">
+                    <div 
+                        class="w-6 h-6 flex items-center justify-center rounded-full 
+                            {% if docente.estado %}
+                                bg-green-500
+                            {% else %}
+                                bg-red-500
+                            {% endif %} text-white"
+                        id="status-icon"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                            {% if docente.estado %}
+                                <!-- Ícono de Verificado (Check) -->
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            {% else %}
+                                <!-- Ícono de No Verificado (Cruz) -->
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium 
+                        {% if docente.estado %}
+                            text-green-500
+                        {% else %}
+                            text-red-500
+                        {% endif %}">
+                        {% if docente.estado %}
+                            Verificado
+                        {% else %}
+                            No Verificado
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <form method="POST" action="{% url 'update_teacher' %}">
+                {% csrf_token %}
+                <div class="grid grid-cols-6 gap-9">
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.nombre }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellidos</label>
+                        <input type="text" name="apellido" id="apellido" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.apellido }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="cedula" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cédula</label>
+                        <input type="number" name="cedula" id="cedula" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.cedula }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="num_telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de teléfono</label>
+                        <input type="number" name="num_telefono" id="num_telefono" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.num_telefono }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="universidad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Universidad</label>
+                        <input type="text" name="universidad" id="universidad" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.universidad }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="cargo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cargo</label>
+                        <input type="text" name="cargo" id="cargo" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.cargo }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="correo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo electrónico</label>
+                        <input type="email" name="correo" id="correo" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.email }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="facultad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Facultad</label>
+                        <input type="text" name="facultad" id="facultad" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.facultad }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="categoria" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
+                        <input type="text" name="categoria" id="categoria" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.categoria }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="especialidad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Especialidad</label>
+                        <input type="text" name="especialidad" id="especialidad" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.especialidad }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="tipo_contrato" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de contrato</label>
+                        <input type="text" name="tipo_contrato" id="tipo_contrato" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.tipo_contrato }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="fecha_contratacion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de contratación</label>
+                        <input type="date" name="fecha_contratacion" id="fecha_contratacion" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.docente.fecha_contratacion }}" required>
+                    </div>     
+                    <div class="col-span-4 sm:col-full">
+                        <button class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">Guardar</button>
+                    </div>             
+                </div>
+            </form>            
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 px-4 pt-1 xl:grid-rows-1 xl:gap-4">
+    <div class="w-full p-8 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800 flex">
+        <div class="flow-root w-full">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xl font-semibold dark:text-white">Experiencia Laboral</h3>
+                <!-- Estado de verificación al lado del encabezado -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-full 
+                        {% if user.docente.cv_docente.experiencia_laboral.exists and experiencias_verificadas %}
+                            bg-green-500
+                        {% else %}
+                            bg-red-500
+                        {% endif %} text-white"
+                        id="status-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                            {% if user.docente.cv_docente.experiencia_laboral.exists and experiencias_verificadas %}
+                                <!-- Ícono de Verificado (Check) -->
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            {% else %}
+                                <!-- Ícono de No Verificado (Cruz) -->
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium 
+                        {% if user.docente.cv_docente.experiencia_laboral.exists and experiencias_verificadas %}
+                            text-green-500
+                        {% else %}
+                            text-red-500
+                        {% endif %}">
+                        {% if user.docente.cv_docente.experiencia_laboral.exists and experiencias_verificadas %}
+                            Verificado
+                        {% else %}
+                            No Verificado
+                        {% endif %}
+                    </span>
+                </div>
+            </div>      
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for experiencia in user.docente.cv_docente.experiencia_laboral.all %}
+                    <li class="py-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <!-- Icono de empresa -->
+                                <svg class="w-6 h-6 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
+                                    {{ experiencia.lugar_trabajo }}
+                                </p>
+                                <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                                    {{ experiencia.cargo }} | {{ experiencia.lugar_trabajo }}
+                                </p>
+                                <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                                    {{ experiencia.fecha_inicio }} - {% if experiencia.fecha_fin %}{{ experiencia.fecha_fin }}{% else %}Presente{% endif %}
+                                </p>
+                            </div>
+                            <div class="inline-flex items-center">
+                                <!-- Botón de detalles que abre el modal -->
+                                <button type="button" data-modal-target="details-modal-{{ experiencia.id }}" data-modal-toggle="details-modal-{{ experiencia.id }}" class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    Detalles
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                <li class="py-4">
+                    <p class="text-gray-500 dark:text-gray-400">No hay experiencias profesionales registradas.</p>
+                </li>
+                {% endfor %}
+            </ul>
+    
+            <!-- Botones para agregar y eliminar experiencia laboral -->
+            <div class="mt-4 flex space-x-4">
+                <!-- Botón de agregar experiencia laboral (Azul) -->
+                <button type="button" data-modal-target="edit-user-modal" data-modal-toggle="edit-user-modal" class="w-12 h-12 flex items-center justify-center text-xl font-bold text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    +
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Detalles -->
+    {% for experiencia in user.docente.cv_docente.experiencia_laboral.all %}
+        <div id="details-modal-{{ experiencia.id }}" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white">
+                <h2 class="text-2xl font-semibold">Detalles de la experiencia</h2>
+                <div class="mt-4">
+                    <p><strong>Lugar de trabajo:</strong> {{ experiencia.lugar_trabajo }}</p>
+                    <p><strong>Cargo:</strong> {{ experiencia.cargo }}</p>
+                    <p><strong>Fecha de inicio:</strong> {{ experiencia.fecha_inicio }}</p>
+                    <p><strong>Fecha de fin:</strong> {% if experiencia.fecha_fin %}{{ experiencia.fecha_fin }}{% else %}Presente{% endif %}</p>
+                    <p><strong>Descripción:</strong> {{ experiencia.descripcion|default:'No disponible' }}</p>
+
+                    <!-- Enlace para ver el PDF del certificado -->
+                    {% if experiencia.certificado %}
+                        <p><strong>Certificado:</strong> <a href="{{ experiencia.certificado.url }}" target="_blank" class="text-blue-500">Ver Certificado (PDF)</a></p>
+                    {% else %}
+                        <p><strong>Certificado:</strong> No disponible</p>
+                    {% endif %}
+                </div>
+                <div class="mt-4 flex justify-end space-x-4">
+                    <!-- Botón de eliminar con formulario POST -->
+                    <form action="{% url 'remove_experience' experiencia.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="px-4 py-2 text-sm text-red-500 border border-red-500 rounded-lg hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-700 dark:hover:text-white">
+                            Eliminar
+                        </button>
+                    </form>
+                    <button type="button" class="px-4 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-toggle="details-modal-{{ experiencia.id }}">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+    <div class="fixed left-0 right-0 z-50 items-center justify-center hidden overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full" id="edit-user-modal">
+        <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
+                    <h3 class="text-xl font-semibold dark:text-white">
+                        Registrar Experiencia Laboral
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white" data-modal-toggle="edit-user-modal">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+    
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <form action="{% url 'register_experience' %}" method="POST" enctype="multipart/form-data"> <!-- Asegúrate de usar enctype aquí -->
+                        {% csrf_token %}
+                        <div class="grid grid-cols-6 gap-6">
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="empresa" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre de la Empresa</label>
+                                <input type="text" name="empresa" value="Empresa" id="empresa" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Empresa" required>
+                            </div>
+    
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="cargo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cargo Ocupado</label>
+                                <input type="text" name="cargo" value="Cargo" id="cargo" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Cargo" required>
+                            </div>
+    
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="fecha_inicio" class="block text-sm font-medium text-gray-900 dark:text-white">Fecha de Inicio</label>
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" class="mt-1 block w-full px-4 py-2 text-base border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500" required>
+                            </div>
+    
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="fecha_fin" class="block text-sm font-medium text-gray-900 dark:text-white">Fecha de Fin</label>
+                                <input type="date" id="fecha_fin" name="fecha_fin" class="mt-1 block w-full px-4 py-2 text-base border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500" required>
+                            </div>
+    
+                            <div class="col-span-6">
+                                <label for="descripcion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
+                                <textarea id="descripcion" name="descripcion" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="👨‍💻Full-stack web developer. Open-source contributor." required></textarea>
+                            </div>
+    
+                            <div class="col-span-6">
+                                <label for="certificado" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subir Certificado</label>
+                                <input type="file" name="certificado" id="certificado" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            </div>
+                        </div>
+    
+                        <!-- Modal footer -->
+                        <div class="mt-5 items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700">
+                            <button class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+   
+    
+    
+    
+</div>
+
+<div class="grid grid-cols-1 px-4 pt-1 xl:grid-rows-1 xl:gap-4">
+    <div class="w-full p-8 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800 flex">
+        <div class="flow-root w-full">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-xl font-semibold dark:text-white">Formación Académica</h3>
+                <!-- Estado de verificación -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 flex items-center justify-center rounded-full 
+                        {% if user.docente.cv_docente.formacion_academica.exists and formaciones_verificadas %}
+                            bg-green-500
+                        {% else %}
+                            bg-red-500
+                        {% endif %} text-white"
+                        id="status-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                            {% if user.docente.cv_docente.formacion_academica.exists and formaciones_verificadas %}
+                                <!-- Ícono de Verificado (Check) -->
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            {% else %}
+                                <!-- Ícono de No Verificado (Cruz) -->
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            {% endif %}
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium 
+                        {% if user.docente.cv_docente.formacion_academica.exists and formaciones_verificadas %}
+                            text-green-500
+                        {% else %}
+                            text-red-500
+                        {% endif %}">
+                        {% if user.docente.cv_docente.formacion_academica.exists and formaciones_verificadas %}
+                            Verificado
+                        {% else %}
+                            No Verificado
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for formacion in user.docente.cv_docente.formacion_academica.all %}
+                    <li class="py-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <!-- Icono de institución -->
+                                <svg class="w-6 h-6 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
+                                    {{ formacion.titulo }} en {{ formacion.institucion }}
+                                </p>
+                                <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                                    {{ formacion.ciudad }}, {{ formacion.pais }}
+                                </p>
+                                <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                                    Desde {{ formacion.fecha_inicio|date:"Y-m-d" }} hasta {{ formacion.fecha_fin|date:"Y-m-d" }}
+                                </p>
+                            </div>
+                            <div class="inline-flex items-center">
+                                <!-- Botón para abrir el modal de detalles -->
+                                <button type="button" data-modal-target="details-modal-two-{{ formacion.id }}" data-modal-toggle="details-modal-two-{{ formacion.id }}" class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    Detalles
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="py-4">
+                        <p class="text-gray-500 dark:text-gray-400">No hay formaciones académicas registradas.</p>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div>
+                <button type="button" data-modal-target="edit-user-modalTwo" data-modal-toggle="edit-user-modalTwo" class="w-12 h-12 flex items-center justify-center text-xl font-bold text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">+</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Detalles de Formación Académica -->
+    {% for formacion in user.docente.cv_docente.formacion_academica.all %}
+    <div id="details-modal-two-{{ formacion.id }}" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white">
+            <h2 class="text-2xl font-semibold">Detalles de la Formación Académica</h2>
+            <div class="mt-4">
+                <p><strong>Institución:</strong> {{ formacion.institucion }}</p>
+                <p><strong>Título:</strong> {{ formacion.titulo }}</p>
+                <p><strong>Ciudad:</strong> {{ formacion.ciudad }}</p>
+                <p><strong>País:</strong> {{ formacion.pais }}</p>
+                <p><strong>Fecha de inicio:</strong> {{ formacion.fecha_inicio|date:"Y-m-d" }}</p>
+                <p><strong>Fecha de fin:</strong> {% if formacion.fecha_fin %}{{ formacion.fecha_fin|date:"Y-m-d" }}{% else %}Presente{% endif %}</p>
+                <!-- Enlace para ver el PDF del certificado -->
+                {% if formacion.certificado %}
+                    <p><strong>Certificado:</strong> <a href="{{ formacion.certificado.url }}" target="_blank" class="text-blue-500">Ver Certificado (PDF)</a></p>
+                {% else %}
+                    <p><strong>Certificado:</strong> No disponible</p>
+                {% endif %}
+            </div>
+            <div class="mt-4 flex justify-end space-x-4">
+                <!-- Botón de eliminar con formulario POST -->
+                <form action="{% url 'remove_academic_background' formacion.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 text-sm text-red-500 border border-red-500 rounded-lg hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-700 dark:hover:text-white">
+                        Eliminar
+                    </button>
+                </form>
+                <button type="button" class="px-4 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-toggle="details-modal-two-{{ formacion.id }}">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Modal para registrar formación académica -->
+    <div class="fixed left-0 right-0 z-50 items-center justify-center hidden overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full" id="edit-user-modalTwo">
+        <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
+                    <h3 class="text-xl font-semibold dark:text-white">
+                        Registrar Formación Académica
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white" data-modal-toggle="edit-user-modalTwo">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <form action="{% url 'register_academic_background' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="grid grid-cols-6 gap-6">
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="nivel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nivel Académico</label>
+                                <input type="text" name="nivel" id="nivel" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Nivel" required>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="institucion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Institución</label>
+                                <input type="text" name="institucion" id="institucion" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Institución" required>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="titulo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Título</label>
+                                <input type="text" name="titulo" id="titulo" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Título" required>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="fecha_inicio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de Inicio</label>
+                                <input type="date" id="fecha_inicio" name="fecha_inicio" class="mt-1 block w-full px-4 py-2 text-base border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500" required>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="fecha_fin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de Fin</label>
+                                <input type="date" id="fecha_fin" name="fecha_fin" class="mt-1 block w-full px-4 py-2 text-base border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500">
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="ciudad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ciudad</label>
+                                <input type="text" id="ciudad" name="ciudad" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Ciudad">
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <label for="pais" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">País</label>
+                                <input type="text" id="pais" name="pais" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="País">
+                            </div>
+                            <div class="col-span-6 m:col-span-3">
+                                <label for="certificado" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subir Certificado</label>
+                                <input type="file" name="certificado" id="certificado" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            </div>
+                        </div>
+                        <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700">
+                            <button class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">Guardar</button>
+                        </div>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-1 px-4 pt-1 xl:grid-rows-1 xl:gap-4">
+    <div class="w-full p-8 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-semibold dark:text-white">Producción Académica</h3>
+            <!-- Estado de verificación -->
+            <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 flex items-center justify-center rounded-full 
+                    {% if docente.cv_docente.produccion_academica.exists and producciones_verificadas %}
+                        bg-green-500
+                    {% else %}
+                        bg-red-500
+                    {% endif %} text-white"
+                    id="status-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                        {% if docente.cv_docente.produccion_academica.exists and producciones_verificadas %}
+                            <!-- Ícono de Verificado (Check) -->
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        {% else %}
+                            <!-- Ícono de No Verificado (Cruz) -->
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        {% endif %}
+                    </svg>
+                </div>
+                <span class="text-sm font-medium 
+                    {% if docente.cv_docente.produccion_academica.exists and producciones_verificadas %}
+                        text-green-500
+                    {% else %}
+                        text-red-500
+                    {% endif %}">
+                    {% if docente.cv_docente.produccion_academica.exists and producciones_verificadas %}
+                        Verificado
+                    {% else %}
+                        No Verificado
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Contenedor de las producciones académicas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for produccion in user.docente.cv_docente.produccion_academica.all %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 p-6 flex flex-col justify-between">
+                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">{{ produccion.titulo }}</h5>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ produccion.tipo }} | {{ produccion.fecha_publicacion|date:"Y-m-d" }}</p>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ produccion.descripcion }}</p> <!-- Descripción agregada -->
+                    <div class="mt-4 flex justify-between items-center">
+                        <!-- Botón para abrir el modal de detalles -->
+                        <button type="button" data-modal-target="details-modal-third-{{ produccion.id }}" data-modal-toggle="details-modal-third-{{ produccion.id }}" class="px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700">
+                            Detalles
+                        </button>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-gray-500 dark:text-gray-400">No hay producciones académicas registradas.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Botón de "+" a la izquierda para agregar una nueva producción académica -->
+        <div class="w-full mt-6 flex justify-start space-x-6">
+            <button type="button" data-modal-target="add-academic-production-modal" data-modal-toggle="add-academic-production-modal" class="w-12 h-12 flex items-center justify-center text-xl font-bold text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                +
+            </button>
+            <button type="button" data-modal-target="SGPA-conexion" data-modal-toggle="SGPA-conexion" class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800""w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                SGPA
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles de Producción Académica -->
+    {% for produccion in user.docente.cv_docente.produccion_academica.all %}
+        <div id="details-modal-third-{{ produccion.id }}" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white">
+                <h2 class="text-2xl font-semibold">Detalles de la Producción Académica</h2>
+                <div class="mt-4">
+                    <p><strong>Título:</strong> {{ produccion.titulo }}</p>
+                    <p><strong>Fecha de publicación:</strong> {{ produccion.fecha_publicacion|date:"Y-m-d" }}</p>
+                    <p><strong>Tipo de producción:</strong> {{ produccion.tipo }}</p>
+                    <p><strong>Institución:</strong> {{ produccion.institucion }}</p>
+                    <p><strong>Descripción:</strong> {{ produccion.descripcion }}</p> <!-- Descripción agregada en modal -->
+                </div>
+                <div class="mt-4 flex justify-end space-x-4">
+                    <!-- Botón de eliminar con formulario POST -->
+                    <form action="{% url 'remove_academic_production' produccion.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="px-4 py-2 text-sm text-red-500 border border-red-500 rounded-lg hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-700 dark:hover:text-white">
+                            Eliminar
+                        </button>
+                    </form>
+                    <button type="button" class="px-4 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-toggle="details-modal-third-{{ produccion.id }}">
+                        Cerrar
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <!-- Modal para agregar una nueva Producción Académica -->
+    <div id="add-academic-production-modal" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white">
+            <h2 class="text-2xl font-semibold">Agregar Producción Académica</h2>
+            <form action="{% url 'register_academic_production' %}" method="post">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <label for="titulo" class="block text-sm text-gray-500 dark:text-gray-400">Título</label>
+                    <input type="text" name="titulo" id="titulo" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600" required>
+                </div>
+                <div class="mt-4">
+                    <label for="fecha_publicacion" class="block text-sm text-gray-500 dark:text-gray-400">Fecha de Publicación</label>
+                    <input type="date" name="fecha_publicacion" id="fecha_publicacion" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600" required>
+                </div>
+                <div class="mt-4">
+                    <label for="tipo" class="block text-sm text-gray-500 dark:text-gray-400">Tipo de Producción</label>
+                    <input type="text" name="tipo" id="tipo" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600" required>
+                </div>
+                <div class="mt-4">
+                    <label for="institucion" class="block text-sm text-gray-500 dark:text-gray-400">Institución</label>
+                    <input type="text" name="institucion" id="institucion" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600" required>
+                </div>
+                <div class="mt-4">
+                    <label for="descripcion" class="block text-sm text-gray-500 dark:text-gray-400">Descripción</label>
+                    <textarea name="descripcion" id="descripcion" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600" required></textarea>
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" class="px-4 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white" data-modal-toggle="add-academic-production-modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm text-white bg-blue-500 border border-blue-500 rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:border-blue-600 dark:hover:bg-blue-700">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="SGPA-conexion" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div class="bg-white p-8 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white max-w-lg w-full">
+                <!-- Título del modal -->
+                <div class="text-center mb-6">
+                    <h2 class="text-3xl font-semibold text-gray-900 dark:text-white">Detalles Producción Académica en SGPA</h2>
+                </div>
+                <!-- Contenido del Modal - Información de la Experiencia -->
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- Información de la Experiencia -->
+                        <div>
+                            <p class="text-lg font-medium text-gray-700 dark:text-gray-300"><strong>Articulo Titulo:</strong></p>
+                            <p class="text-gray-500 dark:text-gray-400"> nommbre que ellos tengan</p>
+                        </div>
+                        <div>
+                            <p class="text-lg font-medium text-gray-700 dark:text-gray-300"><strong>Area de Conocimiento:</strong></p>
+                            <p class="text-gray-500 dark:text-gray-400">nobre que ellos tengan</p>
+                        </div>
+                        <div>
+                            <p class="text-lg font-medium text-gray-700 dark:text-gray-300"><strong>Titulo:</strong></p>
+                            <p class="text-gray-500 dark:text-gray-400">nobre que ellos tengan</p>
+                        </div>
+                        <div>
+                            <p class="text-lg font-medium text-gray-700 dark:text-gray-300"><strong>Fecha de Publicación:</strong></p>
+                            <p class="text-gray-500 dark:text-gray-400">nobre que ellos tengan</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-lg font-medium text-gray-700 dark:text-gray-300"><strong>Detalle de Publicaciones</strong></p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-lg font-medium text-gray-700 dark:text-gray-300"><strong>Descripción:</strong></p>
+                            <p class="text-gray-500 dark:text-gray-400">zonagrande</p>
+                        </div>
+
+                        <!-- Sección del Certificado -->
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="mt-8 flex justify-between items-center">
+                        <!-- Botón Aceptar -->
+                        <button type="submit" class="px-6 py-3 text-sm text-green-600 border border-green-600 rounded-lg hover:bg-green-100 dark:text-green-400 dark:border-green-400 dark:hover:bg-green-700 dark:hover:text-white transition duration-200">
+                            Agregar
+                        </button>
+
+                        <!-- Botón Rechazar -->
+                        <button type="button" class="px-6 py-3 text-sm text-red-600 border border-red-600 rounded-lg hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-700 dark:hover:text-white transition duration-200">
+                           No Agregar
+                         </button>
+
+                        <!-- Botón Cerrar -->
+                         <button type="button" class="px-6 py-3 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white transition duration-200" data-modal-toggle="SGPA-conexion">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>           
+    </div>
+
+
+<div class="grid grid-cols-1 px-4 pt-1 xl:grid-rows-1 xl:gap-4">
+    <div class="w-full p-8 mb-2 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-semibold dark:text-white">Habilidades e Idiomas</h3>
+            <!-- Estado de verificación -->
+            <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 flex items-center justify-center rounded-full 
+                    {% if docente.cv_docente.competencias.exists and competencias_verificadas %}
+                        bg-green-500
+                    {% else %}
+                        bg-red-500
+                    {% endif %} text-white"
+                    id="status-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                        {% if docente.cv_docente.competencias.exists and competencias_verificadas %}
+                            <!-- Ícono de Verificado (Check) -->
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        {% else %}
+                            <!-- Ícono de No Verificado (Cruz) -->
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        {% endif %}
+                    </svg>
+                </div>
+                <span class="text-sm font-medium 
+                    {% if docente.cv_docente.competencias.exists and competencias_verificadas %}
+                        text-green-500
+                    {% else %}
+                        text-red-500
+                    {% endif %}">
+                    {% if docente.cv_docente.competencias.exists and competencias_verificadas %}
+                        Verificado
+                    {% else %}
+                        No Verificado
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        <!-- Contenedor de las habilidades e idiomas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for competencia in user.docente.cv_docente.competencias.all %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 p-6 flex flex-col justify-between">
+                    <h5 class="text-lg font-semibold text-gray-900 dark:text-white">{{ competencia.nombre }}</h5>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Nivel: {{ competencia.nivel }}</p>
+                    
+                    <!-- Botón para abrir el modal de detalles -->
+                    <div class="mt-4 flex justify-between items-center">
+                        <button type="button" data-modal-target="details-modal-forth-{{ competencia.id }}" data-modal-toggle="details-modal-forth-{{ competencia.id }}" class="px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700">
+                            Detalles
+                        </button>
+                    </div>
+                </div>
+                <!-- Modal de detalles de competencia -->
+                <div id="details-modal-forth-{{ competencia.id }}" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div class="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white">
+                        <h2 class="text-2xl font-semibold">Detalles de la Competencia</h2>
+                        <div class="mt-4">
+                            <p><strong>Nombre:</strong> {{ competencia.nombre }}</p>
+                            <p><strong>Nivel:</strong> {{ competencia.nivel }}</p>
+                        </div>
+                        <div class="mt-4 flex justify-end space-x-4">
+                            <!-- Botón de eliminar con formulario POST -->
+                            <form action="{% url 'remove_competence' competencia.id%}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="px-4 py-2 text-sm text-red-500 border border-red-500 rounded-lg hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-700 dark:hover:text-white">
+                                    Eliminar
+                                </button>
+                            </form>
+                            <button type="button" class="px-4 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-toggle="details-modal-forth-{{ competencia.id }}">
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-gray-500 dark:text-gray-400">No hay habilidades o idiomas registrados.</p>
+            {% endfor %}
+        </div>
+        <!-- Botón de "+" a la izquierda para agregar una nueva habilidad o idioma -->
+        <div class="w-full mt-6 flex justify-start">
+            <button type="button" data-modal-target="add-skill-language-modal" data-modal-toggle="add-skill-language-modal" class="w-12 h-12 flex items-center justify-center text-xl font-bold text-white bg-blue-500 rounded-full hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                +
+            </button>
+        </div>
+    </div>
+    <!-- Modal para agregar nueva habilidad o idioma -->
+    <div id="add-skill-language-modal" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white">
+            <h2 class="text-2xl font-semibold">Agregar Habilidad o Idioma</h2>
+            <form action="{% url 'register_competence' %}" method="post">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <label for="nombre" class="block text-sm text-gray-500 dark:text-gray-400">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600" required>
+                </div>
+                <div class="mt-4">
+                    <label for="nivel" class="block text-sm text-gray-500 dark:text-gray-400">Nivel</label>
+                    <input type="text" name="nivel" id="nivel" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600" required>
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button type="button" class="px-4 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white" data-modal-toggle="add-skill-language-modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm text-white bg-blue-500 border border-blue-500 rounded-lg hover:bg-blue-600 dark:bg-blue-600 dark:border-blue-600 dark:hover:bg-blue-700">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</div>
+
+
+
+{%endblock%}

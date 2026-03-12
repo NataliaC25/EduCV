@@ -1,0 +1,184 @@
+
+{% extends "base.html" %}
+{% load static%}
+{% block content%}
+
+<div class="grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
+    <div class="mb-4 col-span-full xl:mb-2">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+              <li class="inline-flex items-center">
+                <a href="{% url 'dashboard' %}" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+                  <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                  Inicio
+                </a>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                  <a class="ml-1 text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-300 dark:hover:text-white">Configuración</a>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                  <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page">Modificar Información personal</span>
+                </div>
+              </li>
+            </ol>
+        </nav>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Modificar Información personal</h1>
+    </div> 
+    <!-- Right Content -->
+    <div class="col-span-full xl:col-auto">
+        <div class="col-span-full xl:col-auto">
+            <div class="p-8 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-10 dark:bg-gray-800">
+                <div class="flex flex-col items-center justify-center"> <!-- Centrado en todas las pantallas -->
+                    <!-- Mostrar imagen de perfil o una imagen por defecto -->
+                    <div class="flex justify-center mb-4"> <!-- Centrado de la imagen -->
+                        <img class="rounded-full w-40 h-40 mx-auto" 
+                             src="{% if user.coordinador_academico.foto %}{{ user.coordinador_academico.foto.url }}{% else %}{% static 'android-icon-36x36.png' %}{% endif %}" 
+                             alt="Foto de perfil">
+                    </div>
+                
+                    <div class="text-center"> <!-- Centrado de texto -->
+                        <h3 class="mb-1 text-xl font-bold text-gray-900 dark:text-white">Foto de perfil</h3>
+                        <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                            JPG o PNG.
+                        </div>
+                        <!-- Formulario para cargar imagen --> <!-- Hice cambio aquí -->
+                        <form action="{% url 'update_picture_coordinator' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="flex items-center space-x-4 justify-center"> <!-- Centrado de los botones -->
+                                <!-- Campo de carga de imagen -->
+                                <label for="profile_picture_coordinator" class="flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z"></path>
+                                        <path d="M9 13h2v5a1 1 0 11-2 0v-5z"></path>
+                                    </svg>
+                                    Subir foto
+                                    <input id="profile_picture_coordinator" name="profile_picture_coordinator" type="file" accept="image/*" class="hidden" onchange="this.form.submit()">
+                                </label>
+                
+                                <!-- Botón de eliminación -->
+                                <button type="submit" name="remove_picture_coordinator" value="true" 
+                                        class="flex items-center py-2 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 10a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z"></path>
+                                    </svg>
+                                    Eliminar
+                                </button>
+                            </div>                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+    <div class="col-span-2">
+        <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+            <h3 class="mb-4 text-xl font-semibold dark:text-white">Información personal</h3>
+            <form method="POST" action="{% url 'update_coordinator'%}">
+                {% csrf_token %}
+                <div class="grid grid-cols-6 gap-6">
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="cedula" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cédula</label>
+                        <input type="number" name="cedula" id="cedula" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.cedula }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.nombre }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellido</label>
+                        <input type="text" name="apellido" id="apellido" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.apellido }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="num_telefono" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de Teléfono</label>
+                        <input type="number" name="num_telefono" id="num_telefono" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.num_telefono }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="universidad" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Universidad</label>
+                        <input type="text" name="universidad" id="universidad" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.universidad }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="cargo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cargo</label>
+                        <input type="text" name="cargo" id="cargo" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.cargo }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="correo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo Electrónico</label>
+                        <input type="email" name="correo" id="correo" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.email }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="dependencia" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Dependencia</label>
+                        <input type="text" name="dependencia" id="dependencia" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.dependencia }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="telefono_oficina" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teléfono de Oficina</label>
+                        <input type="number" name="telefono_oficina" id="telefono_oficina" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.telefono_oficina|default:'No ha registrado' }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="oficina" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Oficina</label>
+                        <input type="text" name="oficina" id="oficina" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ user.coordinador_academico.oficina }}" required>
+                    </div>
+                    <div class="col-span-6 sm:col-full">
+                        <button class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+            <h3 class="mb-4 text-xl font-semibold dark:text-white">Contraseña</h3>
+            <form method="POST" action="{% url 'reset_password' %}">
+                {% csrf_token %}
+                <div class="grid grid-cols-6 gap-6">
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="current-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña actual</label>
+                        <input type="password" name="current-password" id="current-password" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="••••••••" required>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nueva contraseña</label>
+                        <input data-popover-target="popover-password" data-popover-placement="bottom" type="password" name="new-password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="••••••••" required>
+                        <div data-popover id="popover-password" role="tooltip" class="absolute z-10 invisible inline-block text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                            <div class="p-3 space-y-2">
+                                <h3 class="font-semibold text-gray-900 dark:text-white">Must have at least 6 characters</h3>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <div class="h-1 bg-orange-300 dark:bg-orange-400"></div>
+                                    <div class="h-1 bg-orange-300 dark:bg-orange-400"></div>
+                                    <div class="h-1 bg-gray-200 dark:bg-gray-600"></div>
+                                    <div class="h-1 bg-gray-200 dark:bg-gray-600"></div>
+                                </div>
+                                <p>It’s better to have:</p>
+                                <ul>
+                                    <li class="flex items-center mb-1">
+                                        <svg class="w-4 h-4 mr-2 text-green-400 dark:text-green-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                        Upper & lower case letters
+                                    </li>
+                                    <li class="flex items-center mb-1">
+                                        <svg class="w-4 h-4 mr-2 text-gray-300 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                        A symbol (#$&)
+                                    </li>
+                                    <li class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-gray-300 dark:text-gray-400" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                        A longer password (min. 12 chars.)
+                                    </li>
+                                </ul>
+                        </div>
+                        <div data-popper-arrow></div>
+                        </div>
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirmar contraseña</label>
+                        <input type="password" name="confirm-password" id="confirm-password" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="••••••••" required>
+                    </div>
+                    <div class="col-span-6 sm:col-full">
+                        <button class="w-full px-5 py-3 text-base font-medium text-center text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</div>
+{%endblock%}
